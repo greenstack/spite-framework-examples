@@ -1,0 +1,3 @@
+[submodule "spite-framework"]
+	path = spite-framework
+	url = git@github.com:greenstack/spite-framework.git
