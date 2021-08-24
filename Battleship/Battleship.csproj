@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Spite.csproj" />
+    <ProjectReference Include="..\spite-framework\src\Spite.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
