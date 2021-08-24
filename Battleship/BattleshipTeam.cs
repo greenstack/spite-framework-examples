@@ -7,7 +7,7 @@ namespace Battleship
     /// <summary>
     /// A team that participates in a friendly game of battleship.
     /// </summary>
-    public abstract class BattleshipTeam : ITeam<Ship>
+    public abstract class BattleshipTeam : ITeam<Ship>, ICommandExecutor
     {
         public TeamStanding CurrentStanding { get; private set; }
 
@@ -20,7 +20,9 @@ namespace Battleship
 
         public BattleshipTeam Opponent { get; internal set; }
 
-        public void AddEntity(Ship entity)
+		public ITeam ResponsibleTeam => this;
+
+		public void AddEntity(Ship entity)
         {
             entity.Team = this;
             Members.Add(entity);

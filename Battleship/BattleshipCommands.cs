@@ -5,9 +5,9 @@ namespace Battleship
 {
     class ForfeitCommand : CommandBase
     {
-        public ITeam ForfeitingTeam { get; }
+        public BattleshipTeam ForfeitingTeam { get; }
 
-        public ForfeitCommand(ITeam forfeitingTeam)
+        public ForfeitCommand(BattleshipTeam forfeitingTeam)
             : base(new ForfeitAction(forfeitingTeam), forfeitingTeam)
         {
             ForfeitingTeam = forfeitingTeam;
