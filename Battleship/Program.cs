@@ -40,7 +40,6 @@ namespace Battleship
 					{
                         Console.WriteLine(result.ToString());
 					}
-
                 } while (!arena.IsBattleOver);
 
                 Console.WriteLine("The battle is over!");
@@ -73,8 +72,8 @@ namespace Battleship
             PlayerBattleshipTeam playerTeam = new TeamBuilder<PlayerBattleshipTeam, Ship>()
                 .Start()
                 .SetTeamSize(3)
-                .AddEntity(new Ship("Carrier", CarrierSize))
-                .AddEntity(new Ship("Battleship", BattleshipSize))
+                //.AddEntity(new Ship("Carrier", CarrierSize))
+                //.AddEntity(new Ship("Battleship", BattleshipSize))
                 .AddEntity(new Ship("Patrol Boat", PatrolBoatSize))
                 .Finish();
             playerTeam.PrepareBoard();
@@ -83,8 +82,8 @@ namespace Battleship
             EnemyBattleshipTeam enemyTeam = new TeamBuilder<EnemyBattleshipTeam, Ship>()
                 .Start()
                 .SetTeamSize(3)
-                .AddEntity(new Ship("Carrier", CarrierSize))
-                .AddEntity(new Ship("Battleship", BattleshipSize))
+                //.AddEntity(new Ship("Carrier", CarrierSize))
+                //.AddEntity(new Ship("Battleship", BattleshipSize))
                 .AddEntity(new Ship("Patrol Boat", PatrolBoatSize))
                 .Finish();
             enemyTeam.PrepareBoard();
@@ -94,13 +93,7 @@ namespace Battleship
             playerTeam.Opponent = enemyTeam;
             enemyTeam.Opponent = playerTeam;
 
-            BattleshipTurnManager turnManager = new BattleshipTurnManager(playerTeam, enemyTeam);
-
-			turnManager.OnPhaseChanged += TurnManager_OnPhaseChanged;
-
             return new ArenaBuilder<BattleshipTeam>()
-                // The battleship turn manager also sets up the phases
-                .SetTurnManager(turnManager)
                 // This will probably be removed in 0.3.0-alpha, replaced with a "SetMaxTeamCount" method
                 .SetTeamCount(2)
                 // Add the teams that are participating in this game
@@ -108,20 +101,21 @@ namespace Battleship
                 .AddTeam(enemyTeam)
                 // Set up the relationship between the teams. Not crucial in this scenario, but still important.
                 .AddBidirectionalTeamRelationship(playerTeam, enemyTeam, TeamRelationship.Opposing)
+                //.SetTurnManager(turnManager)
+                .SetTurnScheme(TurnSchemeType.DiscretePlayer)
+                .SetBattleOverCondition(() =>
+				{
+                    return playerTeam.CurrentStanding == TeamStanding.Defeated || enemyTeam.CurrentStanding == TeamStanding.Defeated;
+				})
+                .AddPhaseChangedDelegateToTurnManager((ITurnPhase oldPhase, ITurnPhase nextPhase, ITurnManager turnManager) =>
+				{
+                    if (nextPhase is PlayerPhase<ITeamExecutor> playerPhase)
+					{
+                        currentTeam = (BattleshipTeam)playerPhase.CurrentPlayer;
+					}
+				})
                 // Get the actual arena
                 .Finish();
         }
-
-		private static void TurnManager_OnPhaseChanged(ITurnPhase fromPhase, ITurnPhase toPhase, ITurnManager turnManager)
-		{
-            if (toPhase is EnemyPhase ePhase)
-            {
-                currentTeam = ePhase.EnemyTeam;
-            }
-            else if (toPhase is PlayerPhase pPhase)
-			{
-                currentTeam = pPhase.PlayerTeam;
-			}
-		}
 	}
 }

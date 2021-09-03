@@ -8,6 +8,7 @@ namespace Battleship
 	/// <summary>
 	/// The player's phase.
 	/// </summary>
+	[Obsolete("Using default turn manager", true)]
 	class PlayerPhase : ITurnPhase
 	{
 		public BattleshipTeam PlayerTeam { get; }
@@ -48,6 +49,7 @@ namespace Battleship
 		}
 	}
 
+	[Obsolete("Using default turn manager", true)]
 	class EnemyPhase : ITurnPhase
 	{
 		public BattleshipTeam EnemyTeam { get; }

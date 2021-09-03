@@ -7,7 +7,7 @@ namespace Battleship
     /// <summary>
     /// A team that participates in a friendly game of battleship.
     /// </summary>
-    public abstract class BattleshipTeam : ITeam<Ship>, ICommandExecutor
+    public abstract class BattleshipTeam : ITeam<Ship>, Spite.Turns.ITeamExecutor
     {
         public TeamStanding CurrentStanding { get; private set; }
 
@@ -54,6 +54,7 @@ namespace Battleship
                     return CurrentStanding;
                 }
             }
+            CurrentStanding = TeamStanding.Defeated;
             var opponents = context.GetTeamsWithRelationship(this, TeamRelationship.Opposing);
             // This is, in particular, what I dislike. Maybe teams should
             // only _care_ about their own status, and the end of battle
@@ -69,7 +70,7 @@ namespace Battleship
                     return CurrentStanding;
                 }
             }
-            return TeamStanding.Defeated;
+            return CurrentStanding;
         }
 
         public void ForceStanding(TeamStanding standing)

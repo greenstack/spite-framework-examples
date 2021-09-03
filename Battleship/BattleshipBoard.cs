@@ -70,7 +70,7 @@ namespace Battleship
 					{
 						if (!s.IsHit)
 						{
-							sb.Append('w');
+							sb.Append('_');
 						}
 						else
 						{
@@ -89,7 +89,7 @@ namespace Battleship
 						}
 						else
 						{
-							sb.Append('w');
+							sb.Append('_');
 						}
 					}
 				}
